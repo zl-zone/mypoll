@@ -1,0 +1,48 @@
+<!-- polls/templates/polls/vote_create.html -->
+{% extends "layout.html" %}
+{% block title%}설문 문제 등록{%endblock%}
+{% block contents%}
+<h1>설문 문제 등록</h1>
+<!-- action생략: 현재 url로 요청. -->
+<form method="post">
+    {% csrf_token %}
+    <h2>질문</h2>
+    <input type="text" name="question_text" required class="form-control">
+    <h2>보기</h2>
+    <div id="choice_layer">
+        <input type="text" name="choice_text" required class="form-control">
+    </div>
+    <div class="mt-3">
+        <button type="button" onclick="addChoice()" class="btn btn-primary">보기 추가</button>
+        <button type="button" onclick="delChoice()" class="btn btn-danger">보기 제거</button>
+        <button type="submit" class="btn btn-primary">문제 등록</button>
+    </div>
+</form>
+<script>
+    function addChoice() {
+        // div#choice_layer 에 보기 입력 text field 추가.
+        input = document.createElement("input"); // <input>
+        //property(attribute)를 추가
+        input.setAttribute("type", "text");   // <input type='text'>
+        input.setAttribute("name", "choice_text"); // <input type='text' name='choice'>
+        input.setAttribute('required', true); // <input ... required>
+        input.setAttribute("class", "form-control");
+
+        layer = document.getElementById('choice_layer');
+        layer.append(input);
+    }
+    function delChoice() {
+        // div#choice_layer 의 보기 입력 text field를 한개 제거. 
+        // 하나만 있을 경우는 제거하지 안한다.
+        // 노드: 부모노드.removeChild(삭제할 노드)
+        layer = document.getElementById('choice_layer');
+        //두개 이상일 때만 삭제
+        if (layer.children.length >= 2) {
+            layer.removeChild(layer.lastChild)
+        } else {
+            alert("보기가 한개이면 삭제할 수없습니다.");
+        }
+    }
+
+</script>
+{% endblock %}

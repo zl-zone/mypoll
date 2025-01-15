@@ -1,0 +1,37 @@
+<!-- templates/polls/vote_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>설문폼</title>
+</head>
+<body>
+<!-- 메뉴 -->
+<a href="/polls/list">설문목록</a>
+<a href="/polls/vote_create">설문등록</a>
+<hr>
+
+<h1>설문폼</h1>
+<!-- 만약에 error_msg가 context data로 넘어온게 있다면 출력 -->
+{% if error_msg != None %}
+    <div style="color:red;font-size:0.8em">
+        {{error_msg}}
+    </div>
+{% endif %}
+
+<h2>{{question.pk}}. {{question.question_text}}</h2>
+<form action="/polls/vote" method="POST">
+    {% csrf_token %}
+    <!--View에서 검증 실패시 Question을 다시 조회하기 위해서 넘겨주는 값. 
+        화면에 보일 필요 없으므로 hidden type으로 설정 -->
+    <input type="hidden" name="question_id" value="{{question.pk}}">
+    {% for choice in question.choice_set.all %}
+        <input type="radio" name="choice" value="{{choice.pk}}" id="{{choice.pk}}">
+        <label for="{{choice.pk}}">{{choice.choice_text}}</label><br>
+    {% endfor %}
+    <button type="submit">투표</button>
+    <button type="reset">선택해제</button>
+</form>
+</body>
+</html>

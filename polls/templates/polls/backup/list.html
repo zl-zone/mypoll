@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<a href="/polls/vote_create">설문등록</a>
+<hr>
+
+<h1>설문 목록</h1>
+
+<ul>
+{% for question in question_list %}
+    <li>
+        <a href="/polls/vote_form/{{question.pk}}">
+            {{question.pk}}. {{question.question_text|truncatewords:4}}
+            - {{question.pub_date | date:'Y/m/d H:i:s'}}
+        </a>
+    </li> <!--질문번호. 질문-->
+{% endfor%}
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!-- templates/polls/vote_form.html -->
+
+<!-- templates/polls/vote_result.html -->
+{% extends "layout.html" %}
+{% block title %}설문폼{% endblock %}
+{% block contents%}
+<h1>설문폼</h1>
+<!-- 만약에 error_msg가 context data로 넘어온게 있다면 출력 -->
+{% if error_msg != None %}
+    <div style="color:red;font-size:0.8em">
+        {{error_msg}}
+    </div>
+{% endif %}
+
+
+<h2>{{question.pk}}. {{question.question_text}}</h2>
+<form action="{% url 'polls:vote' %}" method="POST" class="mt-3">
+    {% csrf_token %}
+    <!--View에서 검증 실패시 Question을 다시 조회하기 위해서 넘겨주는 값. 
+        화면에 보일 필요 없으므로 hidden type으로 설정 -->
+    <input type="hidden" name="question_id" value="{{question.pk}}">
+    {% for choice in question.choice_set.all %}
+        <input type="radio" class='form-check-input' name="choice" value="{{choice.pk}}" id="{{choice.pk}}">
+        <label for="{{choice.pk}}">{{choice.choice_text}}</label><br>
+    {% endfor %}
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary btn-sm">투표</button>
+        <button type="reset" class="btn btn-primary btn-sm">선택해제</button>
+    </div>
+</form>
+{% endblock %}

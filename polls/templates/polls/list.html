@@ -1,0 +1,68 @@
+<!-- templates/polls/list.html -->
+{% extends "layout.html" %}
+
+{% block title %}설문목록{% endblock %}
+{# layerout.html 의 title 블록에 설문 목록을 넣어라. #}
+
+{% block contents %}
+    <h1>설문 목록</h1>
+    <div class="list-group"> 
+    {% for question in question_list %}
+        <a  href="{% url 'polls:vote_form' question.pk %}" 
+            class="list-group-item list-group-item-action">
+            {{question.pk}}. {{question.question_text|truncatewords:4}}
+            - {{question.pub_date | date:'Y/m/d H:i:s'}}
+        </a>
+    {% empty %}
+        <b>아직 등록된 설문이 없습니다.</b>
+    {% endfor%}
+    </div>
+    <!-- 페이징 처리 - 페이지 링크 -->
+    <ul class="pagination mt-3">
+        {# 이전페이지 그룹으로 이동 버튼 #}
+        {% if has_previous %}
+            <li class="page-item">
+                <a  href="{% url 'polls:list' %}?page={{previous_page_number}}" 
+                    class="page-link">
+                    이전
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class='page-link'>이전</span>
+            </li>
+        {% endif %}
+
+        {# 페이지 번호 링크 - 현재페이지에는 링크를 걸지 않는다. page.number #}
+        {% for page_no in page_range %}
+            {% if question_list.number == page_no %}
+                <li class="page-item active">
+                    <span class="page-link">{{page_no}}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a href="{% url 'polls:list' %}?page={{page_no}}" class="page-link">
+                        {{page_no}}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+
+        {# 다음페이지 그룹으로 이동 버튼 #}
+        {% if has_next %}
+            <li class="page-item">
+                <a href="{% url 'polls:list' %}?page={{next_page_number}}" class="page-link">
+                    다음
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class='page-link'>다음</span>
+            </li>
+        {% endif %}
+
+
+
+    </ul>
+{% endblock %}
